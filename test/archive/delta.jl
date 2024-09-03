@@ -1,9 +1,10 @@
 
 // ... existing code ...
 
-function lcs(a::Vector{String}, b::Vector{String})
-    m, n = length(a), length(b)
-    dp = zeros(Int, m+1, n+1)
+function lcs(a::Vector{Char}, b::Vector{Char}, a_start::Int, a_end::Int, b_start::Int, b_end::Int)
+    m = a_end - a_start + 1
+    n = b_end - b_start + 1
+    dp = zeros(Int, m, n+1)
     for i in 1:m, j in 1:n
         if a[i] == b[j]
             dp[i+1, j+1] = dp[i, j] + 1
