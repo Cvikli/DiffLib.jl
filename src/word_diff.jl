@@ -9,53 +9,29 @@ function word_diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String
 
     while j <= b_len
         if is_wildcard(b_lines[j])
-            next_content = j + 1
-            while next_content <= b_len && (is_wildcard(b_lines[next_content]) || isempty(strip(b_lines[next_content])))
-                next_content += 1
-            end
+            next_content = findnext(line -> !is_wildcard(line) && !isempty(strip(line)), b_lines, j + 1)
+            isnothing(next_content) && ((print_matched && foreach(print_equal, a_lines[i:end])); break)
             
-            if next_content > b_len
-                for k in i:a_len
-                    print_matched && print_equal(a_lines[k])
-                end
-                break
-            else
-                next_wildcard = next_content + 1
-                while next_wildcard <= b_len && !is_wildcard(b_lines[next_wildcard])
-                    next_wildcard += 1
-                end
+            
+            next_wildcard = findnext(is_wildcard, b_lines, next_content + 1)
+            isnothing(next_wildcard) && (next_wildcard = b_len)
 
-                next_match = i
-                for y in 0:15
-                    if next_content + y > b_len
-                        break
-                    end
-                    next_match, best_score = find_best_match(b_lines[next_content + y], a_lines, i, min(i + (next_wildcard - next_content) + 100, a_len))
-                    if best_score > 0.6
-                        break
-                    end
-                end
-                
-                for k in i:next_match-1
-                    print_matched && print_equal(a_lines[k])
-                end
-                
-                i = next_match
-                
-                lines_processed = diff_section(a_lines, b_lines, i, min(i + (next_wildcard - next_content) - 1, a_len), next_content, next_wildcard - 1, print_matched)
-                i += lines_processed - 1
-                j = next_wildcard
+            next_match = i
+            for y in next_content:min(next_content+15,b_len)
+                next_match, best_score = find_best_match(b_lines[y], a_lines, i, min(i + (next_wildcard - next_content) + 100, a_len))
+                best_score > 0.6 && break
             end
+            
+            print_matched && foreach(print_equal, a_lines[i:next_match-1])
+            
+            i = next_match
         else
-            next_wildcard = j + 1
-            while next_wildcard <= b_len && !is_wildcard(b_lines[next_wildcard])
-                next_wildcard += 1
-            end
-            
-            lines_processed = diff_section(a_lines, b_lines, i, min(i + (next_wildcard - j) - 1, a_len), j, next_wildcard - 1, print_matched)
-            
-            i += lines_processed
-            j = next_wildcard
+            next_wildcard = findnext(is_wildcard, b_lines, j + 1)
+            isnothing(next_wildcard) && (next_wildcard = b_len)
         end
+        
+        lines_processed = diff_section(a_lines, b_lines, i, min(i + (next_wildcard - j) - 1, a_len), j, next_wildcard - 1, print_matched)
+        i += lines_processed - (is_wildcard(b_lines[j]) ? 1 : 0)
+        j = next_wildcard
     end
 end

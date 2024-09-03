@@ -5,6 +5,7 @@ using ArgParse
 include("printing.jl")
 include("matching.jl")
 include("lcs.jl")
+include("char_diff.jl")
 include("word_diff.jl")
 include("cli.jl")
 
@@ -18,11 +19,7 @@ function diff_contents(original_content::String, changed_content::String, wildca
 end
 
 function diff_files(original_path::String, changed_path::String, wildcards::Union{String, Vector{String}}, print_matched::Bool=true)
-    original_content = read(original_path, String)
-    changed_content = read(changed_path, String)
-    
-    diff_contents(original_content, changed_content, wildcards, print_matched)
+    diff_contents(read(original_path, String), read(changed_path, String), wildcards, print_matched)
 end
-
 
 end # module DiffLib
