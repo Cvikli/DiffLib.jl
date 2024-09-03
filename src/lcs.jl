@@ -1,7 +1,9 @@
+
+
 function lcs(a::Vector{String}, b::Vector{String}, a_start::Int, a_end::Int, b_start::Int, b_end::Int)
     m = a_end - a_start + 1
     n = b_end - b_start + 1
-    
+
     dp = zeros(Int, m+1, n+1)
     for i in 1:m, j in 1:n
         dp[i+1, j+1] = a[a_start+i-1] == b[b_start+j-1] ? dp[i, j] + 1 : max(dp[i+1, j], dp[i, j+1])
@@ -24,26 +26,84 @@ function lcs(a::Vector{String}, b::Vector{String}, a_start::Int, a_end::Int, b_s
     return dp, lcs_result
 end
 
-function diff_section(a::Vector{String}, b::Vector{String}, a_start::Int, a_end::Int, b_start::Int, b_end::Int, print_matched::Bool)
+
+function group_consecutive_lines(diff_result)
+    isempty(diff_result) && return diff_result
+    
+    # fesfe
+    # fesfe
+    # fesfe
+    grouped = Tuple{Symbol,String}[]
+    current_op, current_content = diff_result[1]
+    # fesfe
+    # fesfe
+    
+    for item in diff_result[2:end]
+        op, content = item
+        if op in (:equal, :delete, :insert)
+            if op == current_op 
+                current_content *= "\n" * content
+            else
+                push!(grouped, (current_op, current_content))
+                current_op, current_content = op, content
+            end
+        else
+            push!(grouped, (current_op, current_content))
+            current_op, current_content = op, content
+        end
+    end
+    push!(grouped, (current_op, current_content))
+    
+    return grouped
+end
+
+function diff_section(a::Vector{String}, b::Vector{String}, a_start::Int, a_end::Int, b_start::Int, b_end::Int, print_output::Bool)
     _, lcs_result = lcs(a, b, a_start, a_end, b_start, b_end)
     i, j = a_start, b_start
+    output = []
     
     for common in lcs_result
         while i <= a_end && a[i] != common
-            j <= b_end && b[j] != common && print_diff(a[i], b[j])
+            if j <= b_end && b[j] != common
+                if is_minor_change(a[i], b[j])
+                    char_diff_result = char_diff(a[i], b[j])
+                    if print_output
+                        for (op, content) in char_diff_result
+                            if op == :char_delete
+                                print(WHITE_ON_RED * content * RESET)
+                            elseif op == :char_insert
+                                print(BLACK_ON_GREEN * content * RESET)
+                            else # :char_equal
+                                print(content)
+                            end
+                        end
+                        println()
+                    end
+                    append!(output, char_diff_result)
+                else
+                    print_output && (print_del(a[i]); print_insert(b[j]))
+                    push!(output, (:delete, a[i]))
+                    push!(output, (:insert, b[j]))
+                end
+            else
+                print_output && print_del(a[i])
+                push!(output, (:delete, a[i]))
+            end
             i += 1
             j += 1
         end
         while j <= b_end && b[j] != common
-            print_insert(b[j])
+            print_output && print_insert(b[j])
+            push!(output, (:insert, b[j]))
             j += 1
         end
-        print_matched && print_equal(common)
+        print_output && print_equal(common)
+        push!(output, (:equal, common))
         i += 1
         j += 1
     end
 
 
-    return i - a_start
+    return group_consecutive_lines(output)
 end
 

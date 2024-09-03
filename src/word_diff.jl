@@ -1,16 +1,22 @@
 is_wildcards(item, wildcards::Vector{String}) = item in wildcards
 is_wildcards(item, wildcards::String)         = item == wildcards
 
-function word_diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String}, wildcards::Union{String, Vector{String}}, print_matched::Bool=true)
+function word_diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String}, wildcards::Union{String, Vector{String}}, print_output::Bool=true)
     is_wildcard(item::String)::Bool = is_wildcards(strip(item), wildcards)
-
+    
+    output = Tuple{Symbol, String}[]
     i, j = 1, 1
     a_len, b_len = length(a_lines), length(b_lines)
 
     while j <= b_len
         if is_wildcard(b_lines[j])
             next_content = findnext(line -> !is_wildcard(line) && !isempty(strip(line)), b_lines, j + 1)
-            isnothing(next_content) && ((print_matched && foreach(print_equal, a_lines[i:end])); break)
+            if isnothing(next_content)
+                lines = join(a_lines[i:end], "\n")
+                print_output && print_equal(lines)
+                push!(output, (:equal, lines))
+                break
+            end
             
             next_wildcard = findnext(is_wildcard, b_lines, next_content + 1)
             isnothing(next_wildcard) && (next_wildcard = b_len)
@@ -21,10 +27,11 @@ function word_diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String
                 best_score > 0.6 && break
             end
             
-            print_matched && foreach(print_equal, a_lines[i:next_match-1])
+            lines = join(a_lines[i:next_match-1], "\n")
+            print_output && print_equal(lines)
+            push!(output, (:equal, lines))
             
             i = next_match
-            # Skip printing the wildcard
             j += 1
             continue
         else
@@ -32,8 +39,11 @@ function word_diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String
             isnothing(next_wildcard) && (next_wildcard = b_len)
         end
         
-        lines_processed = diff_section(a_lines, b_lines, i, min(i + (next_wildcard - j) - 1, a_len), j, next_wildcard - 1, print_matched)
-        i += lines_processed
+        diff_output = diff_section(a_lines, b_lines, i, min(i + (next_wildcard - j) - 1, a_len), j, next_wildcard - 1, print_output)
+        append!(output, diff_output)
+        i += next_wildcard - j
         j = next_wildcard
     end
+    
+    return output
 end

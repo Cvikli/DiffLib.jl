@@ -64,7 +64,8 @@ This project is licensed under the MIT License.
 - [x] find best match should be keeping the order to verify the match. Also should be - whitespace sensitive probably. Also LCS could be used here too to check matching - line by line.
 - [x] Create README.md
 - [x] multi wildcard handling in typesafe manner ;)
-- [ ] output generation to be modular (maybe buffer like mechanics)
+- [x] output generation to be modular (maybe buffer like mechanics)
+- [x] grouping :equal, :insert, :deleted directives...
 - [ ] JS frontend for a merge tool
 - [ ] Integrative new diff handling... Sort of handling the streamed chunked input in - the changes...
 - [ ] Testing if it handles consecutive diffs properly

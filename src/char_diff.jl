@@ -22,44 +22,59 @@ function char_lcs(a::String, b::String)
     return String(lcs_result)
 end
 
+function group_consecutive(diff_result)
+    isempty(diff_result) && return diff_result
+    
+    grouped = []
+    current_op, current_content = diff_result[1]
+    
+    for (op, content) in diff_result[2:end]
+        if op == current_op
+            current_content *= content
+        else
+            push!(grouped, (current_op, current_content))
+            current_op, current_content = op, content
+        end
+    end
+    push!(grouped, (current_op, current_content))
+    
+    return grouped
+end
+
 function char_diff(a::String, b::String)
     lcs = char_lcs(a, b)
     i, j, k = 1, 1, 1
-    result = ""
-    changes = 0
+    result = []
     
     while k <= length(lcs)
         while i <= length(a) && a[i] != lcs[k]
-            result *= "$(WHITE_ON_RED)$(a[i])$(RESET)"
+            push!(result, (:char_delete, string(a[i])))
             i += 1
-            changes += 1
         end
         while j <= length(b) && b[j] != lcs[k]
-            result *= "$(BLACK_ON_GREEN)$(b[j])$(RESET)"
+            push!(result, (:char_insert, string(b[j])))
             j += 1
-            changes += 1
         end
-        result *= lcs[k]
+        push!(result, (:char_equal, string(lcs[k])))
         i += 1
         j += 1
         k += 1
     end
     
     while i <= length(a)
-        result *= "$(WHITE_ON_RED)$(a[i])$(RESET)"
+        push!(result, (:char_delete, string(a[i])))
         i += 1
-        changes += 1
     end
     while j <= length(b)
-        result *= "$(BLACK_ON_GREEN)$(b[j])$(RESET)"
+        push!(result, (:char_insert, string(b[j])))
         j += 1
-        changes += 1
     end
     
-    return result, changes
+    return group_consecutive(result)
 end
 
 function is_minor_change(a::String, b::String, max_changes::Int = 5, max_change_ratio::Float64 = 0.5)
-    _, changes = char_diff(a, b)
+    diff_result = char_diff(a, b)
+    changes = sum(x -> x[1] != :char_equal ? length(x[2]) : 0, diff_result)
     return changes <= max_changes || changes / max(length(a), length(b)) <= max_change_ratio
 end
