@@ -3,7 +3,7 @@ function find_best_match(needle::String, haystack::Vector{String}, start_idx::In
     needle_words = split(needle)
     isempty(needle_words) && return start_idx, 0.0
     
-    best_match, best_idx = 0, start_idx
+    best_match, best_idx = 0.0, start_idx
     end_idx=min(end_idx, length(haystack))
     
     for idx in start_idx:end_idx

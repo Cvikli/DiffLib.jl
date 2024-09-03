@@ -2,3 +2,6 @@ name = "DiffLib"
 uuid = "56baa271-7eb8-4393-b6c5-e92c131540b0"
 authors = ["Marcell <havlikmarcell@gmail.com>"]
 version = "0.1.0"
+
+[deps]
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"

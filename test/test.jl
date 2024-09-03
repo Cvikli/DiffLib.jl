@@ -1,5 +1,5 @@
 using RelevanceStacktrace
-using Differ: word_diff_with_wildcard
+using DiffLib: word_diff_with_wildcard
 
 # content1 = read("test/archive/test_file.jl", String)
 # content2 = read("test/archive/test_file.changes.jl", String)
@@ -14,3 +14,18 @@ blines = String.(split(content2, "\n"))
 
 # word_diff_with_wildcard(alines, blines, "WILDCARD", true)
 word_diff_with_wildcard(alines, blines, ["// ... existing code ...", "// ... rest of the existing code ..."], true)
+
+#%%
+using JET
+
+res = report_package("DiffLib")
+
+
+#%%
+println(res)
+#%%
+
+using InteractiveUtils
+
+@code_warntype word_diff_with_wildcard(alines, blines, ["// ... existing code ...", "// ... rest of the existing code ..."], true)
+
