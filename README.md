@@ -53,7 +53,7 @@ LLMs can generate abbreviations, also these can be forced to be generated to fas
 This project is licensed under the MIT License.
 
 
-# TODO
+## TODO
 - [x] File path handling
 - [x] File readall string handling
 - [x] ARGS handling
@@ -69,3 +69,6 @@ This project is licensed under the MIT License.
 - [ ] Integrative new diff handling... Sort of handling the streamed chunked input in - the changes...
 - [ ] Testing if it handles consecutive diffs properly
 - [ ] Speed measureing... If it isn't infinitly fast...
+
+## HOW did this created?
+By AI... used the tool [AISH.jl](https://github.com/Cvikli/AISH.jl)
