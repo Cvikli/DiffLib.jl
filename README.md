@@ -6,6 +6,9 @@ Also CHARACTER and LINE based diff based on the modification amount and percenta
 
 NOTE: the package was just created by the LLMs fairly recently.
 
+## DEMO
+![image](https://github.com/user-attachments/assets/693e9070-7ca0-4232-9ee9-03e9795f0b62)
+
 ## Features
 - LLM output parsing
 - Word-based and character-based diff
