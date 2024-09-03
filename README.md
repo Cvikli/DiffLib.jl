@@ -70,5 +70,5 @@ This project is licensed under the MIT License.
 - [ ] Testing if it handles consecutive diffs properly
 - [ ] Speed measureing... If it isn't infinitly fast...
 
-## HOW did this created?
-By AI... used the tool [AISH.jl](https://github.com/Cvikli/AISH.jl)
+## How was this created?
+By AI (70-90% and this is just the beginning)... used the tool [AISH.jl](https://github.com/Cvikli/AISH.jl)
