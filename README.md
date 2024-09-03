@@ -4,6 +4,8 @@ LLM centric diffs. We support wildcards!
 
 Also CHARACTER and LINE based diff based on the modification amount and percentage. 
 
+NOTE: the package was just created by the LLMs fairly recently.
+
 ## Features
 - LLM output parsing
 - Word-based and character-based diff
@@ -15,7 +17,7 @@ Also CHARACTER and LINE based diff based on the modification amount and percenta
 
 ```julia
 using Pkg
-Pkg.add("DiffLib")
+Pkg.add(url="https://github.com/Cvikli/DiffLib.jl")
 ```
 
 ## Usage
