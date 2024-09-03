@@ -1,6 +1,7 @@
 function lcs(a::Vector{String}, b::Vector{String}, a_start::Int, a_end::Int, b_start::Int, b_end::Int)
     m = a_end - a_start + 1
     n = b_end - b_start + 1
+    
     dp = zeros(Int, m+1, n+1)
     for i in 1:m, j in 1:n
         dp[i+1, j+1] = a[a_start+i-1] == b[b_start+j-1] ? dp[i, j] + 1 : max(dp[i+1, j], dp[i, j+1])

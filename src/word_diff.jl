@@ -12,7 +12,6 @@ function word_diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String
             next_content = findnext(line -> !is_wildcard(line) && !isempty(strip(line)), b_lines, j + 1)
             isnothing(next_content) && ((print_matched && foreach(print_equal, a_lines[i:end])); break)
             
-            
             next_wildcard = findnext(is_wildcard, b_lines, next_content + 1)
             isnothing(next_wildcard) && (next_wildcard = b_len)
 
@@ -25,13 +24,16 @@ function word_diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String
             print_matched && foreach(print_equal, a_lines[i:next_match-1])
             
             i = next_match
+            # Skip printing the wildcard
+            j += 1
+            continue
         else
             next_wildcard = findnext(is_wildcard, b_lines, j + 1)
             isnothing(next_wildcard) && (next_wildcard = b_len)
         end
         
         lines_processed = diff_section(a_lines, b_lines, i, min(i + (next_wildcard - j) - 1, a_len), j, next_wildcard - 1, print_matched)
-        i += lines_processed - (is_wildcard(b_lines[j]) ? 1 : 0)
+        i += lines_processed
         j = next_wildcard
     end
 end
