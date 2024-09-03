@@ -1,5 +1,50 @@
-# DiffLib.jl
-Creating diff that supports wildcard produced by LLMs
+## DiffLib.jl
+
+LLM codeblock centric diffs. We support wildcards! 
+Also CHARACTER and LINE based diff based on the modification amount and percentage. 
+
+## Features
+- LLM output parsing
+- Word-based and character-based diff
+- Wildcard support for flexible matching
+- CLI for easy file comparison from terminal
+- Customizable output formatting by setting threashold of char or line based diff usage
+
+## Installation
+
+```julia
+using Pkg
+Pkg.add("DiffLib")
+```
+
+## Usage
+
+```julia
+using DiffLib
+
+# Compare two files
+diff_files("original.txt", "changed.txt", ["// ... existing code ..."])
+
+# Compare content strings
+diff_contents(original_content, changed_content, ["WILDCARD"])
+```
+
+```sh
+julia -e 'using DiffLib; DiffLib.run_cli()' -- original.txt changed.txt -w "// ... existing code ..."
+```
+
+## REASON
+LLMs can generate abbreviations, also these can be forced to be generated to faster output:
+`// ... existing code ...`
+`// ... rest of the existing code ...`
+`// ... (previous code remains unchanged)`
+`// ... (rest of the code remains unchanged)`
+- The git diff often fail to find the diff... also many other diff fails. 
+- Also why don't we have more granular diff like word or even character based diff... why should we look for a whole line to find the changes? right? We are humans with limited cognitive speed. :D
+
+## License
+
+This project is licensed under the MIT License.
 
 
 # TODO
@@ -8,13 +53,13 @@ Creating diff that supports wildcard produced by LLMs
 - [x] ARGS handling
 - [x] Refactor to use indexes
 - [x] Typesafety check
-- [ ] Word based diff
-- [ ] Even character based diff
-- [ ] find best match should be keeping the order to verify the match. Also should be - whitespace sensitive probably. Also LCS could be used here too to check matching - line by line.
-- [ ] Create README.md
-- [ ] Integrative new diff handling... Sort of handling the streamed chunked input in - the changes...
+- [x] Word based diff
+- [x] Even character based diff
+- [x] find best match should be keeping the order to verify the match. Also should be - whitespace sensitive probably. Also LCS could be used here too to check matching - line by line.
+- [x] Create README.md
 - [x] multi wildcard handling in typesafe manner ;)
-- [ ] output generation to be modular
+- [ ] output generation to be modular (maybe buffer like mechanics)
 - [ ] JS frontend for a merge tool
-- [ ] Handling consecutive diffs properly
+- [ ] Integrative new diff handling... Sort of handling the streamed chunked input in - the changes...
+- [ ] Testing if it handles consecutive diffs properly
 - [ ] Speed measureing... If it isn't infinitly fast...
