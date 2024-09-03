@@ -1,6 +1,7 @@
 ## DiffLib.jl
 
-LLM codeblock centric diffs. We support wildcards! 
+LLM centric diffs. We support wildcards! 
+
 Also CHARACTER and LINE based diff based on the modification amount and percentage. 
 
 ## Features
