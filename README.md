@@ -1,6 +1,6 @@
 ## DiffLib.jl
 
-Parse LLM's codeblock and let's create a git diff on your own codebase. That is why this diff support [WILDCARDS](https://github.com/Cvikli/DiffLib.jl?tab=readme-ov-file#reason) too! 
+Parse LLM's codeblock and let's create a git diff against your own codeblock. That is why this diff support [WILDCARDS](https://github.com/Cvikli/DiffLib.jl?tab=readme-ov-file#reason) too! 
 
 Improved diff: this tool propose CHARACTER and LINE based diff based on the modification amount and percentage. 
 
