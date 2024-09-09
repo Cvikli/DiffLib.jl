@@ -13,8 +13,8 @@ function parse_arguments()
             help = "Wildcard strings (can be specified multiple times)"
             nargs = '*'
             default = String[]
-        "--verbose", "-v"
-            help = "Enable verbose output"
+        "--detailed", "-d"
+            help = "Enable detailed print output instead of formatted output"
             action = :store_true
     end
 
@@ -23,7 +23,10 @@ end
 
 function run_cli()
     args = parse_arguments()
-    result, _ = diff_files(args["original"], args["changed"], args["wildcards"], print_output=args["verbose"])
-    formatted_output = format_diff(result)
-    println(formatted_output)
+    wildcards = isempty(args["wildcards"]) ? String[] : args["wildcards"]
+    result, _ = diff_files(args["original"], args["changed"], wildcards, print_output=args["detailed"])
+    if !args["detailed"]
+        formatted_output = format_diff(result)
+        println(formatted_output)
+    end
 end
