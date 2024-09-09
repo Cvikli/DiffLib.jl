@@ -17,13 +17,14 @@ Pkg.add(url="https://github.com/Cvikli/DiffLib.jl")
 ```sh
 julia -e "using DiffLib; run_cli()" test_cases/case0.js test_cases/case0_changes.js -d -w "// ..."
 ```
-![image](https://github.com/user-attachments/assets/1439067e-4ba2-43a9-a6bd-8d3339170a43
+![image](https://github.com/user-attachments/assets/1439067e-4ba2-43a9-a6bd-8d3339170a43)
 
 or get the diff like `git diff --word-diff` does:
 ```sh
 julia -e "using DiffLib; run_cli()" test_cases/case0.js test_cases/case0_changes.js -w "// ..."
 ```
-![image](https://github.com/user-attachments/assets/7fdd5602-149d-4ab0-830b-4550050c5a96)
+![image](https://github.com/user-attachments/assets/551c1a7c-aa41-459c-a527-ab8392342c48)
+
 Or in code:
 ```julia
 using DiffLib
