@@ -8,7 +8,17 @@ Also CHARACTER and LINE based diff based on the modification amount and percenta
 NOTE: LLMs can create even better diffs with their wildcard. So all in all I suggest to create the extended version of the file with an LLM diff and then run this script to get very nice diffs. 
 
 ## DEMO
-![image](https://github.com/user-attachments/assets/693e9070-7ca0-4232-9ee9-03e9795f0b62)
+```sh
+julia -e "using DiffLib; run_cli()" test_cases/case0.js test_cases/case0_changes.js -d
+```
+![image](https://github.com/user-attachments/assets/1439067e-4ba2-43a9-a6bd-8d3339170a43)
+or get the diff like `git diff --word-diff` does:
+```sh
+julia -e "using DiffLib; run_cli()" test_cases/case0.js test_cases/case0_changes.js
+```
+![image](https://github.com/user-attachments/assets/7fdd5602-149d-4ab0-830b-4550050c5a96)
+
+
 
 ## Features
 - LLM output parsing
