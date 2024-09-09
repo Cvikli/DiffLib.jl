@@ -1,5 +1,6 @@
 function char_lcs(a::String, b::String)
     m, n = length(a), length(b)
+    (m == 0 || n == 0) && return ""
     dp = zeros(Int, m+1, n+1)
     for i in 1:m, j in 1:n
         dp[i+1, j+1] = a[i] == b[j] ? dp[i, j] + 1 : max(dp[i+1, j], dp[i, j+1])
@@ -22,24 +23,6 @@ function char_lcs(a::String, b::String)
     return String(lcs_result)
 end
 
-function group_consecutive(diff_result)
-    isempty(diff_result) && return diff_result
-    
-    grouped = []
-    current_op, current_content = diff_result[1]
-    
-    for (op, content) in diff_result[2:end]
-        if op == current_op
-            current_content *= content
-        else
-            push!(grouped, (current_op, current_content))
-            current_op, current_content = op, content
-        end
-    end
-    push!(grouped, (current_op, current_content))
-    
-    return grouped
-end
 
 function char_diff(a::String, b::String)
     lcs = char_lcs(a, b)

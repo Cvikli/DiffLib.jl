@@ -1,10 +1,11 @@
 ## DiffLib.jl
 
-LLM centric diffs. We support wildcards! 
+Parse LLM's codeblock and let's create a git diff on your own codebase. That is why this diff support [WILDCARDS](https://github.com/Cvikli/DiffLib.jl?tab=readme-ov-file#reason) too! 
 
 Also CHARACTER and LINE based diff based on the modification amount and percentage. 
 
-NOTE: the package was just created by the LLMs fairly recently.
+
+NOTE: LLMs can create even better diffs with their wildcard. So all in all I suggest to create the extended version of the file with an LLM diff and then run this script to get very nice diffs. 
 
 ## DEMO
 ![image](https://github.com/user-attachments/assets/693e9070-7ca0-4232-9ee9-03e9795f0b62)
@@ -42,9 +43,34 @@ julia -e 'using DiffLib; DiffLib.run_cli()' -- original.txt changed.txt -w "// .
 ## REASON
 LLMs can generate abbreviations, also these can be forced to be generated to faster output:
 `// ... existing code ...`
+`// ... existing imports ...`
+`// ... rest of the component ...`
+`// ... rest of the component remains the same`
+`// ... rest of the existing styles ...`
 `// ... rest of the existing code ...`
-`// ... (previous code remains unchanged)`
 `// ... (rest of the code remains unchanged)`
+`// ... other styled components remain the same`
+`// ... (previous code remains unchanged)`
+`// ... imports remain the same`
+`// ... rest of the component (remove any font-size: 20px declarations) ...`
+`// ... (keep other code unchanged)`
+`// ... (keep other styled components and imports unchanged)`
+`// ... existing JSX ...`
+`// ... existing useEffect and functions ...`
+`// ... (keep existing state variables)`
+`// ... (keep existing values)`
+`// ... (keep existing code)`
+`// ... (keep existing dependencies)`
+`// ... existing error handling ...`  
+`// ... rest of the component ...`
+`// ... (previous dependencies)`
+`// ... (previous code)`
+`// ... (previous values)`
+`// ... (rest of the file)`
+
+
+
+
 - The git diff often fail to find the diff... also many other diff fails. 
 - Also why don't we have more granular diff like word or even character based diff... why should we look for a whole line to find the changes? right? We are humans with limited cognitive speed. :D
 
@@ -69,7 +95,9 @@ This project is licensed under the MIT License.
 - [ ] JS frontend for a merge tool
 - [ ] Integrative new diff handling... Sort of handling the streamed chunked input in - the changes...
 - [ ] Testing if it handles consecutive diffs properly
+- [ ] whitespace "ignore" sort of
 - [ ] Testing testing testing...
+- [ ] LCS + consecutiveity support... So if it finds 2,1,1 in a large text it is worse then finding the 4 consecutive line. (Btw... this should be found most of the time simply because ... tldw)
 - [ ] Speed measureing... If it isn't infinitly fast...
 
 ## How was this created?

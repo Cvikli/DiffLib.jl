@@ -27,36 +27,6 @@ function lcs(a::Vector{String}, b::Vector{String}, a_start::Int, a_end::Int, b_s
 end
 
 
-function group_consecutive_lines(diff_result)
-    isempty(diff_result) && return diff_result
-    
-    # fesfe
-    # fesfe
-    # fesfe
-    grouped = Tuple{Symbol,String}[]
-    current_op, current_content = diff_result[1]
-    # fesfe
-    # fesfe
-    
-    for item in diff_result[2:end]
-        op, content = item
-        if op in (:equal, :delete, :insert)
-            if op == current_op 
-                current_content *= "\n" * content
-            else
-                push!(grouped, (current_op, current_content))
-                current_op, current_content = op, content
-            end
-        else
-            push!(grouped, (current_op, current_content))
-            current_op, current_content = op, content
-        end
-    end
-    push!(grouped, (current_op, current_content))
-    
-    return grouped
-end
-
 function diff_section(a::Vector{String}, b::Vector{String}, a_start::Int, a_end::Int, b_start::Int, b_end::Int, print_output::Bool)
     _, lcs_result = lcs(a, b, a_start, a_end, b_start, b_end)
     i, j = a_start, b_start
@@ -85,12 +55,13 @@ function diff_section(a::Vector{String}, b::Vector{String}, a_start::Int, a_end:
                     push!(output, (:delete, a[i]))
                     push!(output, (:insert, b[j]))
                 end
+                i += 1
+                j += 1
             else
                 print_output && print_del(a[i])
                 push!(output, (:delete, a[i]))
+                i += 1
             end
-            i += 1
-            j += 1
         end
         while j <= b_end && b[j] != common
             print_output && print_insert(b[j])
@@ -104,6 +75,6 @@ function diff_section(a::Vector{String}, b::Vector{String}, a_start::Int, a_end:
     end
 
 
-    return group_consecutive_lines(output)
+    return group_consecutive_lines(output), i
 end
 

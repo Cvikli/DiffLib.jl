@@ -4,22 +4,25 @@ using ArgParse
 
 include("printing.jl")
 include("matching.jl")
+include("grouping.jl")
 include("lcs.jl")
-include("char_diff.jl")
-include("word_diff.jl")
+include("lcs_char.jl")
+include("diff.jl")
 include("cli.jl")
+include("format.jl")
 
-export word_diff_with_wildcard, diff_files, diff_contents, run_cli
+export diff_files, diff_contents, run_cli, format_diff
 
-function diff_contents(original_content::String, changed_content::String, wildcards::Union{String, Vector{String}}; print_output::Bool=true)
-    original_lines = String.(split(original_content, "\n"))
-    changed_lines  = String.(split(changed_content, "\n"))
-    
-    word_diff_with_wildcard(original_lines, changed_lines, wildcards, print_output)
+nsplit(ss) = String.(split(ss, "\n"))
+
+function diff_contents(original_content::String, changed_content::String, wildcards::Union{String, Vector{String}}=String[]; print_output::Bool=false)
+    if isempty(wildcards)
+        diff_without_wildcard(nsplit(original_content), nsplit(changed_content), print_output)
+    else
+        diff_with_wildcard(nsplit(original_content), nsplit(changed_content), wildcards, print_output)
+    end
 end
 
-function diff_files(original_path::String, changed_path::String, wildcards::Union{String, Vector{String}}; print_output::Bool=true)
-    diff_contents(read(original_path, String), read(changed_path, String), wildcards, print_output=print_output)
-end
+diff_files(original_path::String, changed_path::String, wildcards::Union{String, Vector{String}}=String[]; print_output::Bool=false) = diff_contents(read(original_path, String), read(changed_path, String), wildcards; print_output)
 
 end # module DiffLib

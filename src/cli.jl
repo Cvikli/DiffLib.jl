@@ -11,8 +11,11 @@ function parse_arguments()
             required = true
         "--wildcards", "-w"
             help = "Wildcard strings (can be specified multiple times)"
-            nargs = '+'
-            default = ["// ... existing code ...", "// ... rest of the existing code ..."]
+            nargs = '*'
+            default = String[]
+        "--verbose", "-v"
+            help = "Enable verbose output"
+            action = :store_true
     end
 
     return parse_args(s)
@@ -20,5 +23,7 @@ end
 
 function run_cli()
     args = parse_arguments()
-    diff_files(args["original"], args["changed"], args["wildcards"])
+    result, _ = diff_files(args["original"], args["changed"], args["wildcards"], print_output=args["verbose"])
+    formatted_output = format_diff(result)
+    println(formatted_output)
 end
