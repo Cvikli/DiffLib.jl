@@ -23,8 +23,9 @@ end
 
 function run_cli()
     args = parse_arguments()
-    wildcards = isempty(args["wildcards"]) ? String[] : args["wildcards"]
-    result, _ = diff_files(args["original"], args["changed"], wildcards, print_output=args["detailed"])
+    wildcards = String.(args["wildcards"])
+    wildarg = length(wildcards) == 1 ? wildcards[1] : wildcards
+    result, _ = diff_files(args["original"], args["changed"], wildarg, print_output=args["detailed"])
     if !args["detailed"]
         formatted_output = format_diff(result)
         println(formatted_output)
