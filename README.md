@@ -72,6 +72,7 @@ diff_contents(original_content, changed_content, ["WILDCARD"])
    - `// ... (previous code)`
    - `// ... (previous values)`
    - `// ... (rest of the file)`
+     
 This sounds pretty impossible to parse in each case. So I made this beginning match to be the pattern `// ... ` . If only one string is defined then we use the `startswith(wildcard, line)` 
 - The git diff often fail to find the diff... also many other diff fails. 
 - Also why don't we have more granular diff like word or even character based diff... why should we look for a whole line to find the changes? right? We are humans with limited cognitive speed. :D
