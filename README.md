@@ -46,35 +46,35 @@ diff_contents(original_content, changed_content, ["WILDCARD"])
 
 
 ## REASON
--LLMs can generate abbreviations, also these can be forced to be generated to faster output:
-  - `// ... existing code ...`
-  - `// ... existing imports ...`
-  - `// ... rest of the component ...`
-  - `// ... rest of the component remains the same`
-  - `// ... rest of the existing styles ...`
-  - `// ... rest of the existing code ...`
-  - `// ... (rest of the code remains unchanged)`
-  - `// ... other styled components remain the same`
-  - `// ... (previous code remains unchanged)`
-  - `// ... imports remain the same`
-  - `// ... rest of the component (remove any font-size: 20px - declarations) ...`
-  - `// ... (keep other code unchanged)`
-  - `// ... (keep other styled components and imports unchanged)`
-  - `// ... existing JSX ...`
-  - `// ... existing useEffect and functions ...`
-  - `// ... (keep existing state variables)`
-  - `// ... (keep existing values)`
-  - `// ... (keep existing code)`
-  - `// ... (keep existing dependencies)`
-  - `// ... existing error handling ...`  
-  - `// ... rest of the component ...`
-  - `// ... (previous dependencies)`
-  - `// ... (previous code)`
-  - `// ... (previous values)`
-  - `// ... (rest of the file)`
+ -LLMs can generate abbreviations, also these can be forced to be generated to faster output:
+   - `// ... existing code ...`
+   - `// ... existing imports ...`
+   - `// ... rest of the component ...`
+   - `// ... rest of the component remains the same`
+   - `// ... rest of the existing styles ...`
+   - `// ... rest of the existing code ...`
+   - `// ... (rest of the code remains unchanged)`
+   - `// ... other styled components remain the same`
+   - `// ... (previous code remains unchanged)`
+   - `// ... imports remain the same`
+   - `// ... rest of the component (remove any font-size: 20px - declarations) ...`
+   - `// ... (keep other code unchanged)`
+   - `// ... (keep other styled components and imports unchanged)`
+   - `// ... existing JSX ...`
+   - `// ... existing useEffect and functions ...`
+   - `// ... (keep existing state variables)`
+   - `// ... (keep existing values)`
+   - `// ... (keep existing code)`
+   - `// ... (keep existing dependencies)`
+   - `// ... existing error handling ...`  
+   - `// ... rest of the component ...`
+   - `// ... (previous dependencies)`
+   - `// ... (previous code)`
+   - `// ... (previous values)`
+   - `// ... (rest of the file)`
 This sounds pretty impossible to parse in each case. So I made this beginning match to be the pattern `// ... ` . If only one string is defined then we use the `startswith(wildcard, line)` 
-- The git diff often fail to find the diff... also many other diff fails. 
-- Also why don't we have more granular diff like word or even character based diff... why should we look for a whole line to find the changes? right? We are humans with limited cognitive speed. :D
+ - The git diff often fail to find the diff... also many other diff fails. 
+ - Also why don't we have more granular diff like word or even character based diff... why should we look for a whole line to find the changes? right? We are humans with limited cognitive speed. :D
 
 ## License
 
