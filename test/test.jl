@@ -17,6 +17,15 @@ diff_files("test_cases/case1.js", "test_cases/case1_changes.js", "// ...", print
 
 ;
 #%%
+res,_ =diff_files("test_cases/case1.js", "test_cases/case1_changes.js")
+#%%
+println(res[1][2])
+#%%
+using DiffLib: compact_diff_result
+[println("$a\n($i)\n($j)") for (a,i,j) in (res)];
+#%%
+compact_diff_result(res)
+#%%
 
 res, is_weak_match = diff_files("test_cases/case2.js", "test_cases/case2_final.js", print_output=true)
 

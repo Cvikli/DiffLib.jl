@@ -40,11 +40,12 @@ function diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String}, wi
 
     lines = join(a_lines[i:end], "\n")
     !isempty(lines) && ((print_output && print_equal(lines)); push!(output, (:equal, lines)))
-                
     
+    output = compact_diff_result(output)
     return output, were_there_weak_match
 end
+
 function diff_without_wildcard(a_lines::Vector{String}, b_lines::Vector{String}, print_output::Bool=true)
     output, i_new = diff_section(a_lines, b_lines, 1, length(a_lines), 1, length(b_lines), print_output)
-    return output, false
+    return compact_diff_result(output), false
 end

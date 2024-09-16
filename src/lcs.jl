@@ -51,29 +51,28 @@ function diff_section(a::Vector{String}, b::Vector{String}, a_start::Int, a_end:
                     end
                     append!(output, char_diff_result)
                 else
-                    print_output && (print_del(a[i]); print_insert(b[j]))
-                    push!(output, (:delete, a[i]))
-                    push!(output, (:insert, b[j]))
+                    print_output && (print_del(a[i] * "\n"); print_insert(b[j] * "\n"))
+                    push!(output, (:delete, a[i] * "\n"))
+                    push!(output, (:insert, b[j] * "\n"))
                 end
                 i += 1
                 j += 1
             else
-                print_output && print_del(a[i])
-                push!(output, (:delete, a[i]))
+                print_output && print_del(a[i] * "\n")
+                push!(output, (:delete, a[i] * "\n"))
                 i += 1
             end
         end
         while j <= b_end && b[j] != common
-            print_output && print_insert(b[j])
-            push!(output, (:insert, b[j]))
+            print_output && print_insert(b[j] * "\n")
+            push!(output, (:insert, b[j] * "\n"))
             j += 1
         end
-        print_output && print_equal(common)
-        push!(output, (:equal, common))
+        print_output && print_equal(common * "\n")
+        push!(output, (:equal, common * "\n"))
         i += 1
         j += 1
     end
-
 
     return group_consecutive_lines(output), i
 end
