@@ -43,43 +43,61 @@ function group_consecutive(diff_result)
 end
 
 function compact_diff_result(grouped_diff)
-    compacted = Tuple{Symbol,String,String}[]
-    current_inserts = String[]
-    current_deletes = String[]
-    current_char_inserts = String[]
-    current_char_deletes = String[]
-    
+    compacted = Tuple{Symbol,String,String,String}[]
+    current_equal = ""
+    current_insert = ""
+    current_delete = ""
+    current_char_equal = ""
+    current_char_insert = ""
+    current_char_delete = ""
+
     for (op, content) in grouped_diff
-        if op in (:equal, :char_equal)
-            if !isempty(current_inserts) || !isempty(current_deletes)
-                push!(compacted, (:insert_delete, join(current_inserts), join(current_deletes)))
-                current_inserts = String[]
-                current_deletes = String[]
+        if op == :equal
+            if !isempty(current_equal) || !isempty(current_insert) || !isempty(current_delete)
+                push!(compacted, (:equal, current_equal, current_insert, current_delete))
+                current_equal = ""
+                current_insert = ""
+                current_delete = ""
             end
-            if !isempty(current_char_inserts) || !isempty(current_char_deletes)
-                push!(compacted, (:char_insert_delete, join(current_char_inserts), join(current_char_deletes)))
-                current_char_inserts = String[]
-                current_char_deletes = String[]
+            if !isempty(current_char_equal) || !isempty(current_char_insert) || !isempty(current_char_delete)
+                push!(compacted, (:char_equal, current_char_equal, current_char_insert, current_char_delete))
+                current_char_equal = ""
+                current_char_insert = ""
+                current_char_delete = ""
             end
-            push!(compacted, (op, content, ""))
+            current_equal = content
         elseif op == :insert
-            push!(current_inserts, content)
+            current_insert *= content
         elseif op == :delete
-            push!(current_deletes, content)
+            current_delete *= content
+        elseif op == :char_equal
+            if !isempty(current_equal) || !isempty(current_insert) || !isempty(current_delete)
+                push!(compacted, (:equal, current_equal, current_insert, current_delete))
+                current_equal = ""
+                current_insert = ""
+                current_delete = ""
+            end
+            if !isempty(current_char_equal) || !isempty(current_char_insert) || !isempty(current_char_delete)
+                push!(compacted, (:char_equal, current_char_equal, current_char_insert, current_char_delete))
+                current_char_equal = ""
+                current_char_insert = ""
+                current_char_delete = ""
+            end
+            current_char_equal = content
         elseif op == :char_insert
-            push!(current_char_inserts, content)
+            current_char_insert *= content
         elseif op == :char_delete
-            push!(current_char_deletes, content)
+            current_char_delete *= content
         else
-            @assert false "unknown cases: $op $content"
+            @assert false "Unknown operation: $op"
         end
     end
     
-    if !isempty(current_inserts) || !isempty(current_deletes)
-        push!(compacted, (:insert_delete, join(current_inserts), join(current_deletes)))
+    if !isempty(current_equal) || !isempty(current_insert) || !isempty(current_delete)
+        push!(compacted, (:equal, current_equal, current_insert, current_delete))
     end
-    if !isempty(current_char_inserts) || !isempty(current_char_deletes)
-        push!(compacted, (:char_insert_delete, join(current_char_inserts), join(current_char_deletes)))
+    if !isempty(current_char_equal) || !isempty(current_char_insert) || !isempty(current_char_delete)
+        push!(compacted, (:char_equal, current_char_equal, current_char_insert, current_char_delete))
     end
     
     return compacted

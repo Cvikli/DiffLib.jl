@@ -1,12 +1,12 @@
-function format_diff(diff_output::Vector{Tuple{Symbol,String}})
+function format_diff(diff_output::Vector{Tuple{Symbol,String,String,String}})
     formatted = IOBuffer()
-    for (op, content) in diff_output
-        if op == :equal || op == :char_equal
-            write(formatted, content)
-        elseif op == :insert || op == :char_insert
-            write(formatted, "{+", content, "+}")
-        elseif op == :delete || op == :char_delete
-            write(formatted, "[-", content, "-]")
+    for (op, equal_content, insert_content, delete_content) in diff_output
+        write(formatted, equal_content)
+        if !isempty(delete_content)
+            write(formatted, "[-", delete_content, "-]")
+        end
+        if !isempty(insert_content)
+            write(formatted, "{+", insert_content, "+}")
         end
     end
     String(take!(formatted))

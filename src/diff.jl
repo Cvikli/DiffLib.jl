@@ -6,7 +6,7 @@ is_wildcards(item, wildcard::String)         = startswith(item, wildcard)
 function diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String}, wildcards::Union{String, Vector{String}}, print_output::Bool=true)
     is_wildcard(item::String)::Bool = is_wildcards(strip(item), wildcards)
     
-    output = Tuple{Symbol, String}[]
+    output = Tuple{Symbol,String}[]
     i, j = 1, 1
     a_len, b_len = length(a_lines), length(b_lines)
     
@@ -30,7 +30,7 @@ function diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String}, wi
             i = ai
         else
             next_wildcard = findnext(is_wildcard, b_lines, j + 1)
-            isnothing(next_wildcard) && (next_wildcard = b_len+1)
+            isnothing(next_wildcard) && (next_wildcard = b_len + 1)
         end
         diff_output, i_new = diff_section(a_lines, b_lines, i, a_len, j, next_wildcard - 1, print_output)
         append!(output, diff_output)

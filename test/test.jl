@@ -1,6 +1,6 @@
 using Revise
 using RelevanceStacktrace
-using DiffLib: diff_files
+using DiffLib
 
 # content1 = read("test_cases/test_file.jl", String)
 # content2 = read("test_cases/test_file.changes.jl", String)
