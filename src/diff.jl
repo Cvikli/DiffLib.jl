@@ -12,7 +12,7 @@ function diff_with_wildcard(a_lines::Vector{String}, b_lines::Vector{String}, wi
     
     were_there_weak_match = false
 
-    while j < b_len
+    while j <= b_len
         if is_wildcard(b_lines[j])
             next_wildcard = findnext(is_wildcard, b_lines, j + 1)
             isnothing(next_wildcard) && (next_wildcard = b_len + 1)

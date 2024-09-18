@@ -34,44 +34,55 @@ function diff_section(a::Vector{String}, b::Vector{String}, a_start::Int, a_end:
     
     for common in lcs_result
         while i <= a_end && a[i] != common
-            if j <= b_end && b[j] != common
-                if is_minor_change(a[i], b[j])
-                    char_diff_result = char_diff(a[i], b[j])
-                    if print_output
-                        for (op, content) in char_diff_result
-                            if op == :char_delete
-                                print(WHITE_ON_RED * content * RESET)
-                            elseif op == :char_insert
-                                print(BLACK_ON_GREEN * content * RESET)
-                            else # :char_equal
-                                print(content)
-                            end
-                        end
-                        println()
-                    end
-                    append!(output, char_diff_result)
-                else
-                    print_output && (print_del(a[i] * "\n"); print_insert(b[j] * "\n"))
-                    push!(output, (:delete, a[i] * "\n"))
-                    push!(output, (:insert, b[j] * "\n"))
-                end
-                i += 1
-                j += 1
-            else
-                print_output && print_del(a[i] * "\n")
+            # if j <= b_end && b[j] != common
+            #     if is_minor_change(a[i], b[j])
+            #         char_diff_result = char_diff(a[i], b[j])
+            #         if print_output
+            #             for (op, content) in char_diff_result
+            #                 if op == :char_delete
+            #                     print(WHITE_ON_RED * content * RESET)
+            #                 elseif op == :char_insert
+            #                     print(BLACK_ON_GREEN * content * RESET)
+            #                 else # :char_equal
+            #                     print(content)
+            #                 end
+            #             end
+            #             println()
+            #         end
+            #         append!(output, char_diff_result)
+            #     else
+            #         print_output && (print_del(a[i]); print_insert(b[j]))
+            #         push!(output, (:delete, a[i] * "\n"))
+            #         push!(output, (:insert, b[j] * "\n"))
+            #     end
+            #     i += 1
+            #     j += 1
+            # else
+                print_output && print_del(a[i])
                 push!(output, (:delete, a[i] * "\n"))
                 i += 1
-            end
+            # end
         end
         while j <= b_end && b[j] != common
-            print_output && print_insert(b[j] * "\n")
+            print_output && print_insert(b[j])
             push!(output, (:insert, b[j] * "\n"))
             j += 1
         end
-        print_output && print_equal(common * "\n")
+        print_output && print_equal(common)
         push!(output, (:equal, common * "\n"))
         i += 1
         j += 1
+    end
+
+    while j <= b_end
+        print_output && print_insert(b[j])
+        push!(output, (:insert, b[j] * "\n"))
+        j += 1
+    end
+    while i <= a_end
+        print_output && print_del(a[i])
+        push!(output, (:delete, a[i] * "\n"))
+        i += 1
     end
 
     return group_consecutive_lines(output), i

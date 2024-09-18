@@ -19,7 +19,13 @@ diff_files("test_cases/case1.js", "test_cases/case1_changes.js", "// ...", print
 #%%
 res,_ =diff_files("test_cases/case1.js", "test_cases/case1_changes.js")
 #%%
-println(res[1][2])
+res, _ = diff_files("test_cases/server.jl", "test_cases/server.changes2.jl", print_output=true)
+#%%
+display(res)
+#%%
+println(res[1])
+#%%
+res
 #%%
 using DiffLib: compact_diff_result
 [println("$a\n($i)\n($j)") for (a,i,j) in (res)];

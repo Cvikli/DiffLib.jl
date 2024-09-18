@@ -58,6 +58,6 @@ end
 
 function is_minor_change(a::String, b::String, max_changes::Int = 5, max_change_ratio::Float64 = 0.5)
     diff_result = char_diff(a, b)
-    changes = sum(x -> x[1] != :char_equal ? length(x[2]) : 0, diff_result)
+    changes = sum(x -> x[1] != :char_equal ? length(x[2]) : 0, diff_result, init=0)
     return changes <= max_changes || changes / max(length(a), length(b)) <= max_change_ratio
 end

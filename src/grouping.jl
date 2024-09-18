@@ -50,39 +50,38 @@ function compact_diff_result(grouped_diff)
     current_char_equal = ""
     current_char_insert = ""
     current_char_delete = ""
+    prev_op = grouped_diff[1][1]
 
     for (op, content) in grouped_diff
-        if op == :equal
-            if !isempty(current_equal) || !isempty(current_insert) || !isempty(current_delete)
-                push!(compacted, (:equal, current_equal, current_insert, current_delete))
+        if (op != prev_op && 
+            !(op in [:insert, :delete] && prev_op in [:insert, :delete]) && 
+            !(op in [:char_insert, :char_delete] && prev_op in [:char_insert, :char_delete]))
+            if !isempty(current_equal) 
+                push!(compacted, (:equal, current_equal, "", ""))
                 current_equal = ""
+            elseif !isempty(current_char_equal)
+                push!(compacted, (:char_equal, current_char_equal, "", ""))
+                current_char_equal = ""
+            elseif !isempty(current_insert) || !isempty(current_delete)
+                push!(compacted, (:insert_delete, "", current_insert, current_delete))
                 current_insert = ""
                 current_delete = ""
-            end
-            if !isempty(current_char_equal) || !isempty(current_char_insert) || !isempty(current_char_delete)
-                push!(compacted, (:char_equal, current_char_equal, current_char_insert, current_char_delete))
-                current_char_equal = ""
+            elseif !isempty(current_char_insert) || !isempty(current_char_delete)
+                push!(compacted, (:char_insert_delete, "", current_char_insert, current_char_delete))
                 current_char_insert = ""
                 current_char_delete = ""
             end
-            current_equal = content
+            @assert all(isempty.([current_equal, current_insert, current_delete, current_char_equal, current_char_insert, current_char_delete])) "Everything should be empty now! if not then we have to check this algorithm again!"
+        end
+        if op == :equal 
+            current_equal *= content
+        elseif op == :char_equal
+            current_char_equal *= content
         elseif op == :insert
             current_insert *= content
         elseif op == :delete
             current_delete *= content
         elseif op == :char_equal
-            if !isempty(current_equal) || !isempty(current_insert) || !isempty(current_delete)
-                push!(compacted, (:equal, current_equal, current_insert, current_delete))
-                current_equal = ""
-                current_insert = ""
-                current_delete = ""
-            end
-            if !isempty(current_char_equal) || !isempty(current_char_insert) || !isempty(current_char_delete)
-                push!(compacted, (:char_equal, current_char_equal, current_char_insert, current_char_delete))
-                current_char_equal = ""
-                current_char_insert = ""
-                current_char_delete = ""
-            end
             current_char_equal = content
         elseif op == :char_insert
             current_char_insert *= content
@@ -91,6 +90,7 @@ function compact_diff_result(grouped_diff)
         else
             @assert false "Unknown operation: $op"
         end
+        prev_op=op
     end
     
     if !isempty(current_equal) || !isempty(current_insert) || !isempty(current_delete)
